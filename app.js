@@ -10,7 +10,8 @@ const Cart = require("./models/Cart");
 const app = express();
 
 // MongoDB Connection
-mongoose.connect("mongodb+srv://ac9303720_db_user:dQJIpmwKweCThEpT@cluster0.bterq20.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect("mongodb+srv://ac9303720_db_user:B7LNUSp9F5WXkM2x@cluster0.e9surww.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+")
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log("DB Error:", err));
 
@@ -222,5 +223,6 @@ app.get("/logout", (req, res) => {
 
 // Start Server
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+
 
 
