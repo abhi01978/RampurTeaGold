@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - Rampur Gold Tea</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <style>
+      .hero {
+        background: url(https://static.vecteezy.com/system/resources/thumbnails/028/590/162/small_2x/landscape-tea-plantation-in-malaysia-photo.jpg)
+          no-repeat center center;
+        background-size: cover;
+      }
+    </style>
+  </head>
+  <body class="font-sans text-gray-800">
+       <!-- Navbar -->
+    
+  <header class="sticky top-0 bg-white z-50 shadow">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
+    <!-- Logo -->
+    <div class="flex items-center space-x-2">
+      <img src="../img/logo.jpeg" alt="Logo" class="h-20" style="border-radius: 50%" />
+      <div class="text-xl font-bold text-gray-600 hidden sm:block">
+        Rampur Gold Tea
+      </div>
+    </div>
+
+    <!-- Desktop Menu -->
+    <nav class="hidden md:flex items-center space-x-6 font-medium text-gray-700">
+      <ul class="flex space-x-6">
+        <li><a href="./index.html" class="hover:text-green-700">Home</a></li>
+        <li><a href="./about" class="hover:text-green-700">About Us</a></li>
+        <!-- <li><a href="./product" class="hover:text-green-700">Our Product</a></li> -->
+        <li><a href="./contact" class="hover:text-green-700">Contact Us</a></li>
+        <li><a href="./gallery" class="hover:text-green-700">Gallery</a></li>
+      </ul>
+
+      <!-- Cart and Logout Links -->
+      <div class="flex items-center space-x-4">
+        <!-- Cart Icon with Count -->
+        <a href="/cart" class="flex items-center hover:text-green-700 relative">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M3 3h18l-1.5 9h-15l-1.5-9zM6 14h12M10 20h4" />
+          </svg>
+          Cart
+          <% if (cartItemCount > 0) { %>
+            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-2 py-1">
+              <%= cartItemCount %>
+            </span>
+          <% } %>
+        </a>
+        
+        <!-- Logout or Login Links -->
+        <% if (isLoggedIn) { %>
+          <a href="/logout" class="hover:text-green-700">Logout</a>
+        <% } else { %>
+          <a href="/login" class="hover:text-green-700">Login</a>
+          <a href="/register" class="hover:text-green-700">Register</a>
+        <% } %>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden">
+      <button id="menu-btn" class="text-gray-700 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 space-y-2 font-medium text-gray-700">
+    <ul class="space-y-2">
+      <li><a href="/" class="hover:text-green-700">Home</a></li>
+      <li><a href="/about" class="hover:text-green-700">About Us</a></li>
+      <!-- <li><a href="/product" class="hover:text-green-700">Our Product</a></li> -->
+      <li><a href="/contact" class="hover:text-green-700">Contact Us</a></li>
+      <li><a href="/gallery" class="hover:text-green-700">Gallery</a></li>
+    </ul>
+
+    <!-- Cart and Logout in Mobile -->
+    <ul class="flex flex-col items-start">
+      <li class="flex items-center space-x-4">
+        <a href="/cart" class="flex items-center hover:text-green-700 relative">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h18l-1.5 9h-15l-1.5-9zM6 14h12M10 20h4" />
+          </svg>
+          Cart
+          <% if (cartItemCount > 0) { %>
+            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-2 py-1">
+              <%= cartItemCount %>
+            </span>
+          <% } %>
+        </a>
+      </li>
+
+      <% if (isLoggedIn) { %>
+        <a href="/logout" class="hover:text-green-700">Logout</a>
+      <% } else { %>
+        <a href="/login" class="hover:text-green-700">Login</a>
+        <a href="/register" class="hover:text-green-700">Register</a>
+      <% } %>
+    </ul>
+  </div>
+</header>
+
+<!-- Mobile Menu Toggle Script -->
+<script>
+  const menuBtn = document.getElementById("menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  menuBtn.addEventListener("click", function() {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
+      <!-- Announcement Bar -->
+    <div class="bg-[#9B1B22] text-white text-center text-sm py-2 font-medium">
+      Serving over 5 million cups every day!
+    </div>
+  
+
+   
+    <!-- Hero Section -->
+    <section
+      class="hero  flex items-center justify-center text-white bg-opacity-60 bg-black bg-blend-multiply" style="height: 500px;"
+    >
+      <div class="text-center px-4">
+        <h1 class="text-5xl font-bold mb-4" data-aos="fade-down">
+          Rampur Gold Tea
+        </h1>
+        <p class="text-xl" data-aos="fade-up">
+          Pure Taste of Tradition from Uttar Dinajpur
+        </p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-16 bg-gray-100" id="about">
+      <div class="max-w-5xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-10" data-aos="zoom-in">
+          About Us
+        </h2>
+        <div class="md:flex md:items-center" data-aos="fade-up">
+          <div class="md:w-1/2">
+            <img
+              src="./img/tea (3).jpeg"
+              alt="Rampur Tea"
+              class="rounded shadow-lg"
+            />
+          </div>
+          <div class="md:w-1/2 md:pl-10 mt-6 md:mt-0">
+            <p class="text-lg mb-4">
+              <strong>Rampur Gold Tea</strong> is a product by
+              <strong>Alashraf Tea Pvt. Ltd.</strong>, located in Bolancha
+              Bypass, Islampur, Uttar Dinajpur, West Bengal (PIN - 733202).
+            </p>
+            <p class="text-lg mb-4">
+              We take pride in delivering premium quality tea directly from the
+              gardens of North Bengal. Our commitment to taste, purity, and
+              tradition ensures a perfect brew in every cup.
+            </p>
+            <p class="text-lg">
+              Licensed by FSSAI (Lic. No: 12824999000679), we ensure top safety
+              and hygiene standards throughout the production and packaging
+              process.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Slider / Gallery -->
+    <section class="py-16 bg-white">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-10" data-aos="fade-up">
+          Our Journey in Pictures
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <img
+            src="./img/tea (1).jpeg"
+            alt="Gallery 1"
+            class="rounded-lg shadow-md"
+            data-aos="zoom-in"
+          />
+          <img
+            src="./img/tea (5).jpeg"
+            alt="Gallery 2"
+            class="rounded-lg shadow-md"
+            data-aos="zoom-in"
+          />
+          <img
+            src="./img/tea (2).jpeg"
+            alt="Gallery 3"
+            class="rounded-lg shadow-md"
+            data-aos="zoom-in"
+          />
+        </div>
+      </div>
+    </section>
+
+    
+
+  
+        <!-- Footer -->
+<footer class="relative text-white" style="background-image: url(https://media.gettyimages.com/id/1343346538/video/4k-soft-background-loopable.jpg?s=640x640&k=20&c=qzfaKQ_Db3WeyGsQ7hIK440C7c7Ap7mGcS528UgayOY=);background-size: cover;background-repeat: no-repeat;">
+  <!-- Background image -->
+  <div
+    class="absolute inset-0 bg-cover bg-center opacity-50"
+    style="background-image: url('https://images.unsplash.com/photo-1562183241-b937e95585b4');"
+  ></div>
+
+  <!-- Overlay content -->
+  <div class="relative z-10 bg-black bg-opacity-50">
+    <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+      
+      <!-- Logo and About -->
+      <div>
+        <h2 class="text-2xl font-bold text-[#b28e45] mb-4">Rampur Gold Tea</h2>
+        <p>  Rampur Gold Tea is committed to bringing you the authentic flavor of premium quality tea, handpicked and packed with care in Uttar Dinajpur, West Bengal. Trusted by thousands, we deliver tradition in every sip.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-[#b28e45] font-semibold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="./index.html" class="hover:text-[#b28e45] transition">Home</a></li>
+          <li><a href="./about.html" class="hover:text-[#b28e45] transition">About</a></li>
+          <li><a href="./gallery.html" class="hover:text-[#b28e45] transition">Gallery</a></li>
+          <li><a href="./contact.html" class="hover:text-[#b28e45] transition">Contact</a></li>
+          <li><a href="#product" class="hover:text-[#b28e45] transition">Product</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div>
+        <h3 class="text-[#b28e45] font-semibold mb-4">Customer Service</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-[#b28e45] transition">Shipping Info</a></li>
+          <li><a href="#" class="hover:text-[#b28e45] transition">Returns</a></li>
+          <li><a href="#" class="hover:text-[#b28e45] transition">FAQs</a></li>
+          <li><a href="#" class="hover:text-[#b28e45] transition">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Follow Us -->
+      <div>
+      <h3 class="text-[#b28e45] font-semibold mb-4">Contact Us</h3>
+      <p><strong>Contact Number:</strong><br>
+        <a href="tel:+919821716118" class="hover:text-[#b28e45] transition">+91-</a>
+        98116 24634
+      </p>
+      <p class="mt-2"><strong>Email:</strong><br>
+        <a href="mailto:skyrepair126@gmail.com" class="hover:text-[#b28e45] transition">info@rampurgoldtea.in</a>
+      </p>
+      <p class="mt-2"><strong>Address:</strong><br>
+        located in Bolancha
+              Bypass, Islampur, Uttar Dinajpur, West Bengal (PIN - 733202)
+      </p>
+      <p class="mt-2">Alashraf Tea Pvt. Ltd.</p>
+    </div>
+
+    <div class="text-center text-sm text-gray-300 py-6 border-t border-gray-700 mt-6">
+      &copy; 2025 . All rights reserved. Develop by Live India Tech
+    </div>
+  </div>
+    </footer>
+      <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    </script>
+  </body>
+</html>

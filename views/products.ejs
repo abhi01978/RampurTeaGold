@@ -1,0 +1,913 @@
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hero Slider</title>
+     <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<style>
+      .swiper-slide {
+        background-size: cover;
+        background-position: center;
+      }
+        .slide {
+        flex: 0 0 100%; /* Each slide takes full width */
+        height: 100%;
+      }
+      
+
+      @keyframes slideDown {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-slide-down {
+        animation: slideDown 1s ease-out forwards;
+      }
+
+      /* Optional smooth scroll on mouse wheel for horizontal */
+      .scrolling-wrapper {
+        scroll-behavior: smooth;
+      }
+      .slider-track {
+        transition: transform 0.5s ease;
+      }
+        /* Hide scrollbar for all browsers */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+      .scrollbar-hide {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+</style>
+  </head>
+<body class="bg-gray-100">
+  
+   <!-- Navbar -->
+  <header class="sticky top-0 bg-white z-50 shadow">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
+    <!-- Logo -->
+    <div class="flex items-center space-x-2">
+      <img src="../img/logo.jpeg" alt="Logo" class="h-20" style="border-radius: 50%" />
+      <div class="text-xl font-bold text-gray-600 hidden sm:block">
+        Rampur Gold Tea
+      </div>
+    </div>
+
+    <!-- Desktop Menu -->
+    <nav class="hidden md:flex items-center space-x-6 font-medium text-gray-700">
+      <ul class="flex space-x-6">
+        <li><a href="./index.html" class="hover:text-green-700">Home</a></li>
+        <li><a href="./about" class="hover:text-green-700">About Us</a></li>
+        <!-- <li><a href="./product" class="hover:text-green-700">Our Product</a></li> -->
+        <li><a href="./contact" class="hover:text-green-700">Contact Us</a></li>
+        <li><a href="./gallery" class="hover:text-green-700">Gallery</a></li>
+      </ul>
+
+      <!-- Cart and Logout Links -->
+      <div class="flex items-center space-x-4">
+        <!-- Cart Icon with Count -->
+        <a href="/cart" class="flex items-center hover:text-green-700 relative">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M3 3h18l-1.5 9h-15l-1.5-9zM6 14h12M10 20h4" />
+          </svg>
+          Cart
+          <% if (cartItemCount > 0) { %>
+            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-2 py-1">
+              <%= cartItemCount %>
+            </span>
+          <% } %>
+        </a>
+        
+        <!-- Logout or Login Links -->
+        <% if (isLoggedIn) { %>
+          <a href="/logout" class="hover:text-green-700">Logout</a>
+        <% } else { %>
+          <a href="/login" class="hover:text-green-700">Login</a>
+          <a href="/register" class="hover:text-green-700">Register</a>
+        <% } %>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden">
+      <button id="menu-btn" class="text-gray-700 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 space-y-2 font-medium text-gray-700">
+    <ul class="space-y-2">
+      <li><a href="/" class="hover:text-green-700">Home</a></li>
+      <li><a href="/about" class="hover:text-green-700">About Us</a></li>
+      <!-- <li><a href="/product" class="hover:text-green-700">Our Product</a></li> -->
+      <li><a href="/contact" class="hover:text-green-700">Contact Us</a></li>
+      <li><a href="/gallery" class="hover:text-green-700">Gallery</a></li>
+    </ul>
+
+    <!-- Cart and Logout in Mobile -->
+    <ul class="flex flex-col items-start">
+      <li class="flex items-center space-x-4">
+        <a href="/cart" class="flex items-center hover:text-green-700 relative">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h18l-1.5 9h-15l-1.5-9zM6 14h12M10 20h4" />
+          </svg>
+          Cart
+          <% if (cartItemCount > 0) { %>
+            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-2 py-1">
+              <%= cartItemCount %>
+            </span>
+          <% } %>
+        </a>
+      </li>
+
+      <% if (isLoggedIn) { %>
+        <a href="/logout" class="hover:text-green-700">Logout</a>
+      <% } else { %>
+        <a href="/login" class="hover:text-green-700">Login</a>
+        <a href="/register" class="hover:text-green-700">Register</a>
+      <% } %>
+    </ul>
+  </div>
+</header>
+
+<!-- Mobile Menu Toggle Script -->
+<script>
+  const menuBtn = document.getElementById("menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  menuBtn.addEventListener("click", function() {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
+
+
+
+    <!-- Announcement Bar -->
+    <div class="bg-[#9B1B22] text-white text-center text-sm py-2 font-medium">
+      Serving over 5 million cups every day!
+    </div>
+
+   
+
+    <!-- Hero Section with Swiper -->
+    <div class="relative w-full ">
+      <div class="swiper" style="height: 500px">
+        <div class="swiper-wrapper">
+                <div
+            class="swiper-slide flex items-center justify-center text-black object-cover"
+            style="
+              background-image: url(https://static.vecteezy.com/system/resources/previews/049/331/996/non_2x/fresh-green-tea-leaves-and-dried-black-tea-leaves-on-light-green-background-contrast-of-freshness-and-dryness-free-photo.jpeg);
+            "
+          >
+            <div
+              class="p-10 rounded text-center max-w-xl"
+              style="margin-right: 600px"
+            >
+              <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Rampur Gold Tea – The Taste of Tradition
+              </h1>
+              <p class="mb-6 text-lg md:text-xl">
+                Savor the rich flavor and aroma crafted from the finest tea
+                leaves handpicked with care. Experience the authentic tea-making
+                process with Rampur Gold Tea, where tradition meets quality.
+              </p>
+              <div class="space-x-4">
+                <button
+                  class="px-6 py-2 bg-[#9B1B22] rounded hover:bg-teal-600 transition text-white"
+                >
+                  Explore Our Range
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div
+            class="swiper-slide flex items-center justify-center text-white"
+            style="
+              background-image: url(https://www.shutterstock.com/shutterstock/videos/3419485621/thumb/3.jpg?ip=x480);
+            "
+          >
+            <div class="p-10 rounded text-center max-w-xl">
+              <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Pure Quality, Every Cup
+              </h1>
+              <p class="mb-6 text-lg md:text-xl">
+                Sourced from the best estates to ensure a refreshing and
+                invigorating tea experience. Our commitment to purity and
+                freshness guarantees a cup of tea that delights your senses
+                every time.
+              </p>
+              <div class="space-x-4">
+                <button
+                  class="px-6 py-2 bg-[#9B1B22] rounded hover:bg-teal-600 transition"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div
+            class="swiper-slide flex items-center justify-center text-white"
+            style="
+              background-image: url(https://png.pngtree.com/thumb_back/fh260/background/20241012/pngtree-a-beautiful-curly-haired-young-woman-is-enjoying-her-morning-coffee-image_16375650.jpg);
+              background-size: cover;
+              background-repeat: no-repeat;
+            "
+          >
+            <div class="p-10 rounded text-center max-w-xl">
+              <h1 class="text-4xl md:text-5xl font-bold mb-4">Learn More</h1>
+              <p class="mb-15 text-lg md:text-xl">
+                Enjoy the natural antioxidants and health benefits with every
+                sip of Rampur Gold Tea. Start your day with the perfect blend
+                that boosts your energy and keeps you refreshed.
+              </p>
+              <div class="space-x-4">
+                <button
+                  class="px-6 py-2 bg-[#9B1B22] rounded hover:bg-teal-600 transition"
+                >
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <div class="swiper-button-prev text-white"></div>
+        <div class="swiper-button-next text-white"></div>
+
+        <!-- Pagination (dots) -->
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+<script>
+      const swiper = new Swiper(".swiper", {
+        loop: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+    </script>
+    <!-- img -->
+         <!-- Image Slider / Gallery -->
+    <section class="py-16 bg-white">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-10" data-aos="fade-up">
+          Our Journey in Pictures
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <img
+            src="./img/tea (1).jpeg"
+            alt="Gallery 1"
+            class="rounded-lg shadow-md"
+            data-aos="zoom-in"
+          />
+          <img
+            src="./img/tea (5).jpeg"
+            alt="Gallery 2"
+            class="rounded-lg shadow-md"
+            data-aos="zoom-in"
+          />
+          <img
+            src="./img/tea (2).jpeg"
+            alt="Gallery 3"
+            class="rounded-lg shadow-md"
+            data-aos="zoom-in"
+          />
+        </div>
+      </div>
+    </section>
+ <!-- Shop by Category Section -->
+    <section class="text-center bg-[#014421] py-12">
+      <h2
+        class="text-2xl md:text-3xl font-semibold text-[#b28e45] text-center mb-10"
+      >
+        SHOP BY CATEGORY
+      </h2>
+
+      <div class="overflow-x-auto scrolling-wrapper">
+        <div class="flex gap-20 px-6 md:px-10 pb-4 w-max">
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (1).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>
+          </div>
+
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (2).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>
+          </div>
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (3).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>
+          </div>
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (4).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>
+          </div>
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (5).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>
+          </div>
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (6).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>
+          </div>
+          <!-- Category Item 1 -->
+          <div class="group text-center w-48 flex-shrink-0">
+            <div
+              class="w-44 h-44 mx-auto overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
+            >
+              <img
+                src="./img/tea (7).jpeg"
+                alt="Gift Boxes"
+                class="object-cover w-full h-full"
+              />
+            </div>
+            <h3
+              class="mt-4 font-medium text-[#b28e45] group-hover:text-[#a0522d] transition-colors duration-300"
+            >
+              RAMPUR GOLD TEA
+            </h3>
+            <p class="text-sm text-green-200">Premimum Quality</p>          </div>          
+        </div>
+      </div>
+      </section>
+      <br>
+    </section>
+    <!-- product sell -->
+   <section id="product">
+  <center>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-[80%]">
+      <% products.forEach(product => { %>
+        <div class="text-center group bg-white border p-4 rounded shadow hover:shadow-md transition">
+          <div class="overflow-hidden h-[200px] flex items-center justify-center mb-4">
+            <img
+              src="<%= product.img %>"
+              alt="<%= product.name %>"
+              class="h-full w-auto object-contain transform transition duration-300 ease-in-out group-hover:scale-105 group-hover:rotate-3"
+            />
+          </div>
+          <div class="flex justify-center items-center space-x-1 text-yellow-500 text-sm">
+            <span>★★★★★</span>
+            <span class="text-gray-500 text-sm"><%= product.reviews %> reviews</span>
+          </div>
+          <h3 class="mt-2 font-medium min-h-[48px]">
+            <%= product.name %>
+          </h3>
+          <p class="text-sm text-gray-600"><%= product.description %></p>
+          <p class="mt-1 font-semibold">₹<%= product.price %></p>
+          <button
+            class="add-to-cart mt-4 px-5 py-2 bg-green-900 text-white font-medium text-sm rounded hover:bg-green-800 transition"
+            data-id="<%= product._id %>"
+          >
+            ADD TO CART
+          </button>
+        </div>
+      <% }) %>
+    </div>
+  </center>
+</section>
+
+
+<script>
+document.querySelectorAll(".add-to-cart").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const id = btn.dataset.id;
+    const res = await fetch(`/add-to-cart/${id}`, { method: "POST" });
+
+    if(res.status === 401) {
+      alert("Please login or register first!");
+      window.location.href = "/login";  // redirect to login
+      return;
+    }
+
+    if(res.ok) alert("Added to cart!");
+  });
+});
+</script>
+  <br><br>
+  <!-- costumers -->
+ <section class=" min-h-screen flex items-center justify-center " style="background-image: url(https://media.gettyimages.com/id/1343346538/video/4k-soft-background-loopable.jpg?s=640x640&k=20&c=qzfaKQ_Db3WeyGsQ7hIK440C7c7Ap7mGcS528UgayOY=);background-size: cover;background-repeat: no-repeat;" >
+      <div class="container mx-auto px-4" >
+        <h2
+          class="text-3xl md:text-4xl font-bold text-[#b28e45] text-center mb-8"
+        >
+          What Our Customers Say
+        </h2>
+
+        <!-- Slider Track -->
+     
+    <div class="w-full max-w-7xl mx-auto">
+      <div class="overflow-hidden relative">
+        <!-- Slider Track -->
+        <div id="sliderTrack" class="flex slider-track">
+          <!-- Slide Cards -->
+          <div class="w-1/3 flex-shrink-0 p-4">
+            <div class="bg-white p-6 rounded-xl shadow text-center">
+              <img
+                src="https://femina.wwmindia.com/content/2021/sep/women-thumb1632797644.jpg"
+                class="w-24 h-24 mx-auto rounded-full object-cover"
+              />
+              <div class="text-yellow-500 mt-3 text-xl">★★★★★</div>
+              <p class="mt-3 text-gray-700">
+                “Wonderful chai! Shipped from India.”
+              </p>
+              <h3 class="mt-2 font-bold uppercase text-gray-800">Palak </h3>
+            </div>
+          </div>
+
+          <div class="w-1/3 flex-shrink-0 p-4">
+            <div class="bg-white p-6 rounded-xl shadow text-center">
+              <img
+                src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                class="w-24 h-24 mx-auto rounded-full object-cover"
+              />
+              <div class="text-yellow-500 mt-3 text-xl">★★★★★</div>
+              <p class="mt-3 text-gray-700">“BEST. TEA. EVER.”</p>
+              <h3 class="mt-2 font-bold uppercase text-gray-800">Varun</h3>
+            </div>
+          </div>
+
+          <div class="w-1/3 flex-shrink-0 p-4">
+            <div class="bg-white p-6 rounded-xl shadow text-center">
+              <img
+                src="https://photosmint.com/wp-content/uploads/aesthetic-hide-face-girl-pic-1.webp"
+                class="w-24 h-24 mx-auto rounded-full object-cover"
+              />
+              <div class="text-yellow-500 mt-3 text-xl">★★★★★</div>
+              <p class="mt-3 text-gray-700">“I love good tea!”</p>
+              <h3 class="mt-2 font-bold uppercase text-gray-800">Taniya</h3>
+            </div>
+          </div>
+
+          <div class="w-1/3 flex-shrink-0 p-4">
+            <div class="bg-white p-6 rounded-xl shadow text-center">
+              <img
+                src="https://www.shutterstock.com/image-photo/close-portrait-beautiful-young-attractive-600nw-1522695962.jpg"
+                class="w-24 h-24 mx-auto rounded-full object-cover"
+              />
+              <div class="text-yellow-500 mt-3 text-xl">★★★★★</div>
+              <p class="mt-3 text-gray-700">“Incredible freshness!”</p>
+              <h3 class="mt-2 font-bold uppercase text-gray-800">
+                Kanishka
+              </h3>
+            </div>
+          </div>
+
+          <div class="w-1/3 flex-shrink-0 p-4">
+            <div class="bg-white p-6 rounded-xl shadow text-center">
+              <img
+                src="https://static.vecteezy.com/system/resources/thumbnails/005/346/410/small_2x/close-up-portrait-of-smiling-handsome-young-caucasian-man-face-looking-at-camera-on-isolated-light-gray-studio-background-photo.jpg"
+                class="w-24 h-24 mx-auto rounded-full object-cover"
+              />
+              <div class="text-yellow-500 mt-3 text-xl">★★★★★</div>
+              <p class="mt-3 text-gray-700">“My daily ritual now.”</p>
+              <h3 class="mt-2 font-bold uppercase text-gray-800">
+                Rohit Sharma
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-center mt-6 space-x-4">
+          <button
+            onclick="prevSlide()"
+            class="bg-[#b28e45] hover:bg-green-800 text-white px-4 py-2 rounded"
+          >
+            Prev
+          </button>
+          <button
+            onclick="nextSlide()"
+            class="bg-[#b28e45] hover:bg-green-800 text-white px-4 py-2 rounded"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+     </div>
+   </section>
+    <script>
+      const track = document.getElementById("sliderTrack");
+      const cardsPerView = 3;
+      const totalCards = track.children.length;
+      let currentIndex = 0;
+
+      function updateSlider() {
+        const movePercent = (100 / cardsPerView) * currentIndex;
+        track.style.transform = `translateX(-${movePercent}%)`;
+      }
+
+      function nextSlide() {
+        if (currentIndex < totalCards - cardsPerView) {
+          currentIndex++;
+          updateSlider();
+        }
+      }
+
+      function prevSlide() {
+        if (currentIndex > 0) {
+          currentIndex;
+          updateSlider();
+        }
+      }
+    </script>
+ <section class="py-10">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 text-center">
+        
+        <!-- 1. Free Shipping -->
+        <div>
+          <img src="https://img.icons8.com/ios/64/delivery.png" alt="Free Shipping" class="mx-auto mb-4"/>
+          <h3 class="font-semibold text-lg mb-2">Free Shipping</h3>
+          <p class="text-sm text-gray-800">All orders over Rs.400 qualify for free shipping & we offer same day delivery in select cities for an additional fee of Rs.150 only</p>
+        </div>
+
+        <!-- 2. Sustainable -->
+        <div>
+          <img src="https://img.icons8.com/ios/64/leaf.png" alt="Sustainable" class="mx-auto mb-4"/>
+          <h3 class="font-semibold text-lg mb-2">Sustainable</h3>
+          <p class="text-sm text-gray-800">Our green teas & white teas are certified by the Rainforest Alliance & grown as per sustainable agricultural practices.</p>
+        </div>
+
+        <!-- 3. Personalized Assistance -->
+        <div>
+          <img src="https://img.icons8.com/ios/64/customer-support.png" alt="Personalized Assistance" class="mx-auto mb-4"/>
+          <h3 class="font-semibold text-lg mb-2">Personalized Assistance</h3>
+          <p class="text-sm text-gray-800">Our customer care team is available 6 days a week 9.30am–6pm to answer all your queries and to assist in placing orders</p>
+        </div>
+
+        <!-- 4. Complementary Sample -->
+        <div>
+          <img src="https://img.icons8.com/ios/64/gift--v1.png" alt="Complementary Sample" class="mx-auto mb-4"/>
+          <h3 class="font-semibold text-lg mb-2">Complementary Sample</h3>
+          <p class="text-sm text-gray-800">Every order is accompanied by 2 tea samples & 2 tea coasters</p>
+        </div>
+
+        <!-- 5. 100% Natural -->
+        <div>
+          <img src="https://img.icons8.com/ios/64/plant-under-sun.png" alt="100% Natural" class="mx-auto mb-4"/>
+          <h3 class="font-semibold text-lg mb-2">100% Natural</h3>
+          <p class="text-sm text-gray-800">Sourced from certified tea estates and farmers, our blends are made in micro batches every single day under the strictest hygiene standards with all natural herbs, spices & botanicals</p>
+        </div>
+
+      </div>
+    </div>
+  </section> 
+  <!-- img -->
+    <section class="w-full max-w-7xl mx-auto px-4 py-12">
+      <h2 class="text-3xl font-bold text-center mb-8">Blog </h2>
+
+      <!-- Slider Container -->
+      <div class="relative">
+        <div
+          class="flex overflow-x-auto space-x-6 scrollbar-hide snap-x snap-mandatory px-2 pb-4"
+        >
+          <!-- Image Card (Repeat this 10 times) -->
+            <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/tea (7).jpeg"
+              alt="Image 7"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/gallery (2).jpeg"
+              alt="Image 1"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+           <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/tea (4).jpeg"
+              alt="Image 10"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/gallery (1).jpeg"
+              alt="Image 2"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/gallery.jpeg"
+              alt="Image 3"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/gallery (3).jpeg"
+              alt="Image 4"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/gallery (4).jpeg"
+              alt="Image 5"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/gallery(5).jpeg"
+              alt="Image 6"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/tea (6).jpeg"
+              alt="Image 8"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="flex-shrink-0 w-64 h-80 bg-blue-100 rounded-xl overflow-hidden snap-center"
+          >
+            <img
+              src="./img/tea (5).jpeg"
+              alt="Image 9"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+<footer class="relative text-white" style="background-image: url(https://media.gettyimages.com/id/1343346538/video/4k-soft-background-loopable.jpg?s=640x640&k=20&c=qzfaKQ_Db3WeyGsQ7hIK440C7c7Ap7mGcS528UgayOY=);background-size: cover;background-repeat: no-repeat;">
+  <!-- Background image -->
+  <div
+    class="absolute inset-0 bg-cover bg-center opacity-50"
+    style="background-image: url('https://images.unsplash.com/photo-1562183241-b937e95585b4');"
+  ></div>
+
+  <!-- Overlay content -->
+  <div class="relative z-10 bg-black bg-opacity-50">
+    <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+      
+      <!-- Logo and About -->
+      <div>
+        <h2 class="text-2xl font-bold text-[#b28e45] mb-4">Rampur Gold Tea</h2>
+        <p>  Rampur Gold Tea is committed to bringing you the authentic flavor of premium quality tea, handpicked and packed with care in Uttar Dinajpur, West Bengal. Trusted by thousands, we deliver tradition in every sip.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-[#b28e45] font-semibold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="./index.html" class="hover:text-[#b28e45] transition">Home</a></li>
+          <li><a href="./about.html" class="hover:text-[#b28e45] transition">About</a></li>
+          <li><a href="./gallery.html" class="hover:text-[#b28e45] transition">Gallery</a></li>
+          <li><a href="./contact.html" class="hover:text-[#b28e45] transition">Contact</a></li>
+          <li><a href="#product" class="hover:text-[#b28e45] transition">Product</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div>
+        <h3 class="text-[#b28e45] font-semibold mb-4">Customer Service</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-[#b28e45] transition">Shipping Info</a></li>
+          <li><a href="#" class="hover:text-[#b28e45] transition">Returns</a></li>
+          <li><a href="#" class="hover:text-[#b28e45] transition">FAQs</a></li>
+          <li><a href="#" class="hover:text-[#b28e45] transition">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Follow Us -->
+      <div>
+      <h3 class="text-[#b28e45] font-semibold mb-4">Contact Us</h3>
+      <p><strong>Contact Number:</strong><br>
+        <a href="tel:+919821716118" class="hover:text-[#b28e45] transition">+91-</a>
+        98116 24634
+      </p>
+      <p class="mt-2"><strong>Email:</strong><br>
+        <a href="mailto:skyrepair126@gmail.com" class="hover:text-[#b28e45] transition">info@rampurgoldtea.in</a>
+      </p>
+      <p class="mt-2"><strong>Address:</strong><br>
+        located in Bolancha
+              Bypass, Islampur, Uttar Dinajpur, West Bengal (PIN - 733202)
+      </p>
+      <p class="mt-2">Alashraf Tea Pvt. Ltd.</p>
+    </div>
+
+    <div class="text-center text-sm text-gray-300 py-6 border-t border-gray-700 mt-6">
+      &copy; 2025 . All rights reserved. Develop by Live India Tech
+    </div>
+  </div>
+    </footer>
+
+    <!-- Scroll Script -->
+      <script>
+  const slider = document.getElementById("slider");
+  const prev = document.getElementById("prev");
+  const next = document.getElementById("next");
+
+  let current = 0;
+  const totalSlides = slider.children.length;
+
+  function updateSlide() {
+    slider.style.transform = `translateX(-${current * 100}%)`;
+  }
+
+  next.addEventListener("click", () => {
+    current = (current + 1) % totalSlides;
+    updateSlide();
+  });
+
+  prev.addEventListener("click", () => {
+    current = (current - 1 + totalSlides) % totalSlides;
+    updateSlide();
+  });
+
+  // ✅ Autoplay every 3 seconds
+  setInterval(() => {
+    current = (current + 1) % totalSlides;
+    updateSlide();
+  }, 3000); // 3000ms = 3 seconds
+</script>
+
+    <script>
+      const navbar = document.getElementById("navbar");
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 20) {
+          navbar.classList.add("navbar-scrolled");
+          navbar.classList.remove("text-white");
+          navbar.classList.add("text-black");
+        } else {
+          navbar.classList.remove("navbar-scrolled");
+          navbar.classList.add("text-white");
+          navbar.classList.remove("text-black");
+        }
+      });
+    </script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    </script>
+  </body>
+</html>
